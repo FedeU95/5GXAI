@@ -1,0 +1,5 @@
+*.csv filter=lfs diff=lfs merge=lfs -text
+*.json filter=lfs diff=lfs merge=lfs -text
+5GNIDD.csv filter=lfs diff=lfs merge=lfs -text
+json/MSA_json/expl_Bidding_down_with_AttachReject.json filter=lfs diff=lfs merge=lfs -text
+json/MSA_json/expl_Bidding_down_with_TAUReject.json filter=lfs diff=lfs merge=lfs -text
