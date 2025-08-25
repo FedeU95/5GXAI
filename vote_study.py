@@ -6,9 +6,53 @@ import numpy as np
 #STEP 4 - 5: Explanations experiments (Vote-XAI)
 
 # Load data
-vote_xai_features = pd.read_csv("top_features_per_class_MSA_new.csv", index_col=0)  # see all_minimal.py
-shap_stats = pd.read_csv("shap_min_max_mean_per_feature_MSA.csv") # see shap_study.py
+vote_xai_features = pd.read_csv("top_features_per_class.csv", index_col=0)  # see all_minimal.py
+#vote_xai_features = pd.read_csv("top_features_FNs.csv", index_col=0) 
+#vote_xai_features = pd.read_csv("top_features_PFCP.csv", index_col=0) 
 
+import seaborn as sns
+
+# take top-k per class
+k = 5
+keep = set()
+for c in vote_xai_features.columns:
+    keep |= set(vote_xai_features[c].nlargest(k).index)
+
+df_small = vote_xai_features.loc[sorted(keep)]
+'''
+# Define shorter names for attack classes
+short_names = {
+    "PFCP Session Modification Flood (DROP)": "DROP Flood",
+    "PFCP Session Modification Flood (DUPL)": "DUPL Flood",
+    "PFCP Session Deletion Flood": "DEL Flood",
+    "PFCP Session Establishment Flood": "EST Flood"
+}
+
+# Rename columns
+df_small = df_small.rename(columns=short_names)
+'''
+plt.figure(figsize=(12, 8))
+sns.set_context("notebook", font_scale=1.4)
+
+sns.heatmap(
+    df_small * 100, annot=True, fmt=".1f", cmap="Greens",
+    cbar_kws={'label': 'Occurrence (%)'}
+)
+
+plt.title("VoTE-XAI Stability (5GNIDD)", fontsize=18)
+plt.ylabel("Features", fontsize=18)
+plt.xlabel("Attack Classes", fontsize=18)
+
+plt.xticks(fontsize=16, rotation=0, ha="center")  # cleaner x-axis
+plt.yticks(fontsize=16)
+
+plt.tight_layout()
+plt.show()
+
+"""
+#shap_stats = pd.read_csv("shap_min_max_mean_per_feature.csv") # see shap_study.py
+#shap_stats = pd.read_csv("shap_min_max_mean_FN_5GNIDD.csv") # see shap_study.py
+shap_stats = pd.read_csv("shap_min_max_mean_per_feature_PFCP.csv") # see shap_study.py
 # Restructure SHAP dataframe: set Feature as index
 shap_stats.set_index("Feature", inplace=True)
 
@@ -42,17 +86,17 @@ for class_label in class_labels:
     print(shap_table)
 
 for class_label in vote_xai_features.columns:
-    # Get top features based on occurrence (>90%)
-    top_features = vote_xai_features[class_label][vote_xai_features[class_label] > 0.9].index.tolist()
+    # Get top features based on occurrence (>80%)
+    top_features = vote_xai_features[class_label][vote_xai_features[class_label] > 0.3].index.tolist()
     if not top_features:
         continue
 
-    # Limit to top 10 based on Vote-XAI occurrence
+    # Limit to top 6 based on Vote-XAI occurrence
     top_features = sorted(
         top_features,
         key=lambda f: vote_xai_features[class_label][f],
         reverse=True
-    )[:10]
+    )[:6]
 
     # Get SHAP mean values for top features
     shap_col = f"{class_label}_Mean"
@@ -92,7 +136,7 @@ for class_label in vote_xai_features.columns:
     # Ticks and styling
     ax1.tick_params(axis='y', labelsize=20, colors="green")
     ax2.tick_params(axis='y', labelsize=20, colors="blue")
-    ax1.tick_params(axis='x', labelsize=14, labelrotation=45)
+    ax1.tick_params(axis='x', labelsize=14)
 
     plt.title(f"Vote-XAI Occurrence and Mean SHAP Values ({class_label})", fontsize=24)
     green_patch = mpatches.Patch(color='green', label='Vote-XAI (%)')
@@ -101,3 +145,5 @@ for class_label in vote_xai_features.columns:
 
     plt.tight_layout()
     plt.show()
+
+"""  
