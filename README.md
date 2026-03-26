@@ -1,9 +1,16 @@
 This repository contains experiments from the paper:
 
-Feature Attribution in 5G Intrusion Detection: A Statistical vs. Logic-Based Comparison
-Federica Uccello, Simin Nadjm-Tehrani
-Department of Computer and Information Science, Linköping University, Sweden
-Journal of Information Security and Applications (JISA) - in print 
+@article{UCCELLO2026104448,
+title = {Feature attribution in 5G intrusion detection: A statistical vs. logic-based comparison},
+journal = {Journal of Information Security and Applications},
+volume = {99},
+pages = {104448},
+year = {2026},
+issn = {2214-2126},
+doi = {https://doi.org/10.1016/j.jisa.2026.104448},
+url = {https://www.sciencedirect.com/science/article/pii/S2214212626000785},
+author = {Federica Uccello and Simin Nadjm-Tehrani}
+}
 
 This project relies on the VoTE-XAI library.
 For access to the library and compiled binaries, see:
